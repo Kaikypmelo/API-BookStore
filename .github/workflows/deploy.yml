@@ -5,15 +5,19 @@ on:
     branches:
       - main
 
+# Adicionamos esta variável global para forçar o uso do Node 24 e remover o aviso
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4 # Versão atualizada
+        uses: actions/checkout@v4
 
       - name: Log in to Azure Container Registry
-        uses: azure/docker-login@v2 # Versão atualizada
+        uses: azure/docker-login@v2
         with:
           login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
           username: ${{ secrets.REGISTRY_USERNAME }}
@@ -29,8 +33,8 @@ jobs:
     needs: build-and-push
     steps:
       - name: Deploy to Azure Web App
-        uses: azure/webapps-deploy@v3 # Versão atualizada
+        uses: azure/webapps-deploy@v3
         with:
-          app-name: 'webapp-aula123-kaiky' # Lembre-se de manter o nome exato do seu Web App aqui
+          app-name: 'webapp-aula123' # Mantenha o nome exato do seu Web App
           publish-profile: ${{ secrets.WEBAPP_PUBLISH_PROFILE }}
           images: '${{ secrets.REGISTRY_LOGIN_SERVER }}/bookstore-api:${{ github.sha }}'
