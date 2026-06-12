@@ -5,15 +5,19 @@ on:
     branches:
       - main
 
+# Força o uso do Node 24 em todas as actions para remover os avisos amarelos
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Log in to Azure Container Registry
-        uses: azure/docker-login@v1
+        uses: azure/docker-login@v2
         with:
           login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
           username: ${{ secrets.REGISTRY_USERNAME }}
@@ -29,8 +33,8 @@ jobs:
     needs: build-and-push
     steps:
       - name: Deploy to Azure Web App
-        uses: azure/webapps-deploy@v2
+        uses: azure/webapps-deploy@v3
         with:
-          app-name: 'webapp-aula123-kaiky' # Substitua pelo nome exato do seu Web App
+          app-name: 'webapp-aula123' # ATENÇÃO: Confirme se este é o nome exato do seu Web App no Azure
           publish-profile: ${{ secrets.WEBAPP_PUBLISH_PROFILE }}
-          images: '${{ secrets.REGISTRY_LOGIN_SERVER }}/API-BookStore:${{ github.sha }}'
+          images: '${{ secrets.REGISTRY_LOGIN_SERVER }}/bookstore-api:${{ github.sha }}'
