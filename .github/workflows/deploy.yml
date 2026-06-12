@@ -10,10 +10,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4 # Versão atualizada
 
       - name: Log in to Azure Container Registry
-        uses: azure/docker-login@v1
+        uses: azure/docker-login@v2 # Versão atualizada
         with:
           login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
           username: ${{ secrets.REGISTRY_USERNAME }}
@@ -29,8 +29,8 @@ jobs:
     needs: build-and-push
     steps:
       - name: Deploy to Azure Web App
-        uses: azure/webapps-deploy@v2
+        uses: azure/webapps-deploy@v3 # Versão atualizada
         with:
-          app-name: 'webapp-aula123-kaiky' 
+          app-name: 'webapp-aula123-kaiky' # Lembre-se de manter o nome exato do seu Web App aqui
           publish-profile: ${{ secrets.WEBAPP_PUBLISH_PROFILE }}
           images: '${{ secrets.REGISTRY_LOGIN_SERVER }}/bookstore-api:${{ github.sha }}'
