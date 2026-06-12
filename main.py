@@ -1,3 +1,4 @@
+import os
 from fastapi import FastAPI, HTTPException, Depends, status
 from sqlmodel import SQLModel, Field, Session, create_engine, select, Relationship
 from typing import List, Optional
@@ -7,8 +8,11 @@ from contextlib import asynccontextmanager
 # ==========================================
 # 1. CONFIGURAÇÃO DO BANCO DE DADOS
 # ==========================================
-# Conexão com o PostgreSQL usando os dados fornecidos
-DATABASE_URL = "postgresql://kaiky:123456789@127.0.0.1:5432/aula_python_db"
+# Lê a variável de ambiente DATABASE_URL no Azure. Se não existir, usa o banco local.
+DATABASE_URL = os.getenv(
+    "DATABASE_URL", 
+    "postgresql://kaiky:123456789@127.0.0.1:5432/aula_python_db"
+)
 engine = create_engine(DATABASE_URL, echo=True)
 
 def get_session():
